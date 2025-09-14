@@ -1,6 +1,7 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const helmet = require("helmet");
+const cors = require("cors");
 const routes = require("./routes");
 const {
   STATUS_CODES,
@@ -8,14 +9,25 @@ const {
   mapErrorToResponse,
 } = require("./utils/constants");
 
-const { PORT = 3001, MONGODB_URI = "mongodb://127.0.0.1:27017/wtwr_db" } =
-  process.env;
+const {
+  PORT = 3001,
+  MONGODB_URI = "mongodb://127.0.0.1:27017/wtwr_db",
+  FRONTEND_URL,
+} = process.env;
 
 const app = express();
 
 // Security enhancements
 app.use(helmet()); // Use helmet for security headers
 app.disable("x-powered-by"); // Disable X-Powered-By header to reduce fingerprinting
+
+// CORS configuration
+app.use(
+  cors({
+    origin: FRONTEND_URL || "http://localhost:5173", // fallback to local dev
+    credentials: true,
+  })
+);
 
 // Connect to MongoDB
 mongoose

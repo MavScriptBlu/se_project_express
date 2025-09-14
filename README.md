@@ -30,7 +30,25 @@ The WTWR (What to Wear?) Express API is a robust backend server that powers the 
 
 3. **Set up MongoDB**
 
-   - Ensure MongoDB is running on `mongodb://127.0.0.1:27017/wtwr_db`
+   **Installation:**
+   - **Windows**: Download MongoDB Community Server from [MongoDB Download Center](https://www.mongodb.com/try/download/community)
+   - **Alternative**: Use Chocolatey: `choco install mongodb` (requires admin privileges)
+   - For other OS, follow the [official installation guide](https://docs.mongodb.com/manual/installation/)
+
+   **Verify MongoDB is running:**
+
+   ```bash
+   # Check MongoDB service status (Windows)
+   sc query MongoDB
+   
+   # Check if port 27017 is listening
+   netstat -an | findstr 27017
+   ```
+
+   **Connection Details:**
+   - MongoDB should be running on `mongodb://127.0.0.1:27017/wtwr_db`
+   - Default port: `27017`
+   - Database name: `wtwr_db`
 
 4. **Start the server**
 
@@ -38,6 +56,31 @@ The WTWR (What to Wear?) Express API is a robust backend server that powers the 
    npm run start    # Production mode
    npm run dev      # Development mode with hot reload
    ```
+
+## Troubleshooting
+
+**Port 3001 already in use (EADDRINUSE error):**
+
+```bash
+# Check for Node.js processes
+tasklist | grep node
+
+# Kill Node.js processes (Windows)
+powershell "Stop-Process -Name node -Force"
+
+# Alternative: Use a different port
+PORT=3002 npm run dev
+```
+
+**MongoDB connection issues:**
+
+```bash
+# Start MongoDB service (Windows)
+sc start MongoDB
+
+# Check MongoDB logs
+type "C:\Program Files\MongoDB\Server\8.0\log\mongod.log"
+```
 
 ## Project Structure
 
