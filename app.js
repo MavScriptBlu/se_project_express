@@ -24,7 +24,7 @@ app.disable("x-powered-by"); // Disable X-Powered-By header to reduce fingerprin
 // CORS configuration
 app.use(
   cors({
-    origin: FRONTEND_URL || "http://localhost:5173", // fallback to local dev
+    origin: FRONTEND_URL || "http://localhost:3000", // fallback to local dev
     credentials: true,
   })
 );
