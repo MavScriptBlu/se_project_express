@@ -21,7 +21,15 @@ function createClothingItem(req, res) {
   const { name, weather, imageUrl } = req.body;
   const owner = req.user._id;
 
-  ClothingItem.create({ name, weather, imageUrl, owner })
+  // Use uploaded file if present, otherwise use imageUrl from body
+  let finalImageUrl = imageUrl;
+  if (req.file) {
+    // File was uploaded - use the file path
+    // This will be accessible at http://localhost:3001/uploads/filename
+    finalImageUrl = `/uploads/${req.file.filename}`;
+  }
+
+  ClothingItem.create({ name, weather, imageUrl: finalImageUrl, owner })
     .then((item) => res.status(STATUS_CODES.CREATED).json(item))
     .catch((err) => {
       const { statusCode, message } = mapErrorToResponse(err);

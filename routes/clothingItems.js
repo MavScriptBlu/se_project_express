@@ -1,4 +1,5 @@
 const router = require("express").Router();
+const upload = require("../middleware/upload");
 const {
   getClothingItems,
   createClothingItem,
@@ -10,8 +11,8 @@ const {
 // GET /items - returns all clothing items
 router.get("/", getClothingItems);
 
-// POST /items - creates a new item
-router.post("/", createClothingItem);
+// POST /items - creates a new item (with optional file upload)
+router.post("/", upload.single("image"), createClothingItem);
 
 // DELETE /items/:itemId - deletes an item by _id
 router.delete("/:itemId", deleteClothingItem);

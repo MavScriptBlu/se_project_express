@@ -14,3 +14,7 @@ security.js
 .DS_Store
 .idea
 .vscode
+
+# Uploaded files
+uploads/
+!uploads/.gitkeep
