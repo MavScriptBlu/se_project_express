@@ -14,3 +14,4 @@ security.js
 .DS_Store
 .idea
 .vscodecoverage/
+coverage/
