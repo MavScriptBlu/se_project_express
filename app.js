@@ -3,11 +3,7 @@ const mongoose = require("mongoose");
 const helmet = require("helmet");
 const cors = require("cors");
 const routes = require("./routes");
-const {
-  STATUS_CODES,
-  ERROR_MESSAGES,
-  mapErrorToResponse,
-} = require("./utils/constants");
+const { STATUS_CODES, ERROR_MESSAGES } = require("./utils/constants");
 
 const {
   PORT = 3001,
@@ -39,9 +35,9 @@ app.use("/", routes);
 // eslint-disable-next-line no-unused-vars
 app.use((err, req, res, next) => {
   console.error(err.stack);
-  res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({
-    message: mapErrorToResponse(ERROR_MESSAGES.INTERNAL_SERVER_ERROR),
-  });
+  const statusCode = err.statusCode || STATUS_CODES.INTERNAL_SERVER_ERROR;
+  const message = err.message || ERROR_MESSAGES.GENERIC_SERVER_ERROR;
+  res.status(statusCode).json({ message });
 });
 
 // Start the server (only in local development)
