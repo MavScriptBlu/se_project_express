@@ -33,16 +33,23 @@ function createClothingItem(req, res) {
 function deleteClothingItem(req, res) {
   const { itemId } = req.params;
 
-  ClothingItem.findByIdAndDelete(itemId)
+  ClothingItem.findById(itemId)
     .orFail(() => {
       const error = new Error(ERROR_MESSAGES.ITEM_NOT_FOUND);
       error.statusCode = STATUS_CODES.NOT_FOUND;
       throw error;
     })
-    .then(() => {
-      res
-        .status(STATUS_CODES.OK)
-        .json({ message: ERROR_MESSAGES.ITEM_DELETED });
+    .then((item) => {
+      if (item.owner.toString() !== req.user._id.toString()) {
+        const error = new Error("Forbidden: you are not the owner of this item");
+        error.statusCode = STATUS_CODES.FORBIDDEN;
+        throw error;
+      }
+      return item.deleteOne().then(() => {
+        res
+          .status(STATUS_CODES.OK)
+          .json({ message: ERROR_MESSAGES.ITEM_DELETED });
+      });
     })
     .catch((err) => {
       // Check if it's a custom error with a status code
