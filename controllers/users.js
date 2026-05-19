@@ -12,7 +12,13 @@ const { JWT_SECRET } = require("../utils/config");
 function createUser(req, res) {
   const { name, avatar, email, password } = req.body;
 
-  bcrypt
+  if (!password) {
+    return res
+      .status(STATUS_CODES.BAD_REQUEST)
+      .json({ message: ERROR_MESSAGES.INVALID_DATA });
+  }
+
+  return bcrypt
     .hash(password, 10)
     .then((hash) => User.create({ name, avatar, email, password: hash }))
     .then((user) =>
@@ -38,7 +44,13 @@ function createUser(req, res) {
 function login(req, res) {
   const { email, password } = req.body;
 
-  User.findUserByCredentials(email, password)
+  if (!email || !password) {
+    return res
+      .status(STATUS_CODES.BAD_REQUEST)
+      .json({ message: ERROR_MESSAGES.INVALID_DATA });
+  }
+
+  return User.findUserByCredentials(email, password)
     .then((user) => {
       const token = jwt.sign({ _id: user._id }, JWT_SECRET, {
         expiresIn: "7d",
