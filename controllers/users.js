@@ -15,11 +15,14 @@ function createUser(req, res) {
   bcrypt
     .hash(password, 10)
     .then((hash) => User.create({ name, avatar, email, password: hash }))
-    .then((user) => {
-      const userData = user.toObject();
-      delete userData.password;
-      return res.status(STATUS_CODES.CREATED).json(userData);
-    })
+    .then((user) =>
+      res.status(STATUS_CODES.CREATED).json({
+        _id: user._id,
+        name: user.name,
+        avatar: user.avatar,
+        email: user.email,
+      })
+    )
     .catch((err) => {
       if (err.code === 11000) {
         return res
