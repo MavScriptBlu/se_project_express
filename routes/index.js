@@ -2,8 +2,19 @@ const router = require("express").Router();
 const userRouter = require("./users");
 const clothingItemRouter = require("./clothingItems");
 const { STATUS_CODES, ERROR_MESSAGES } = require("../utils/constants");
+const { createUser, login } = require("../controllers/users");
+const { getClothingItems } = require("../controllers/clothingItems");
+const auth = require("../middlewares/auth");
 
-// Use the routers
+// Public routes (no auth required)
+router.post("/signup", createUser);
+router.post("/signin", login);
+router.get("/items", getClothingItems);
+
+// Apply auth middleware to all routes below
+router.use(auth);
+
+// Protected routes
 router.use("/users", userRouter);
 router.use("/items", clothingItemRouter);
 
